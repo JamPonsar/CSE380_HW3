@@ -6,6 +6,8 @@ import MainMenu from "./MainMenu";
 import Viewport from "../../Wolfie2D/SceneGraph/Viewport";
 import RenderingManager from "../../Wolfie2D/Rendering/RenderingManager";
 import SceneManager from "../../Wolfie2D/Scene/SceneManager";
+import { GameEventType } from "../../Wolfie2D/Events/GameEventType";
+import HW3Level1 from "./HW3Level1";
 
 /**
  * The second level for HW4. It should be the goose dungeon / cave.
@@ -14,7 +16,7 @@ export default class Level2 extends HW3Level {
 
     public static readonly PLAYER_SPAWN = new Vec2(32, 32);
     public static readonly PLAYER_SPRITE_KEY = "PLAYER_SPRITE_KEY";
-    public static readonly PLAYER_SPRITE_PATH = "hw4_assets/spritesheets/Hero.json";
+    public static readonly PLAYER_SPRITE_PATH = "hw4_assets/spritesheets/pickleman.json";
 
     public static readonly TILEMAP_KEY = "LEVEL2";
     public static readonly TILEMAP_PATH = "hw4_assets/tilemaps/HW4Level2.json";
@@ -23,10 +25,13 @@ export default class Level2 extends HW3Level {
     public static readonly WALLS_LAYER_KEY = "Main";
 
     public static readonly LEVEL_MUSIC_KEY = "LEVEL_MUSIC";
-    public static readonly LEVEL_MUSIC_PATH = "hw4_assets/music/hw5_level_music.wav";
+    public static readonly LEVEL_MUSIC_PATH = "hw4_assets/music/level2_music.mp3";
 
     public static readonly JUMP_AUDIO_KEY = "PLAYER_JUMP";
     public static readonly JUMP_AUDIO_PATH = "hw4_assets/sounds/jump.wav";
+
+    public static readonly DYING_AUDIO_KEY = "PLAYER_DYING";
+    public static readonly DYING_AUDIO_PATH = "hw4_assets/sounds/dying_sound.mp3";
 
     public static readonly TILE_DESTROYED_KEY = "TILE_DESTROYED";
     public static readonly TILE_DESTROYED_PATH = "hw4_assets/sounds/switch.wav";
@@ -51,6 +56,7 @@ export default class Level2 extends HW3Level {
         this.levelMusicKey = Level2.LEVEL_MUSIC_KEY
         this.jumpAudioKey = Level2.JUMP_AUDIO_KEY;
         this.tileDestroyedAudioKey = Level2.TILE_DESTROYED_KEY;
+        this.dyingAudioKey = Level2.DYING_AUDIO_KEY;
 
         // Level end size and position
         this.levelEndPosition = new Vec2(32, 216).mult(this.tilemapScale);
@@ -69,6 +75,7 @@ export default class Level2 extends HW3Level {
         this.load.audio(this.levelMusicKey, Level2.LEVEL_MUSIC_PATH);
         this.load.audio(this.jumpAudioKey, Level2.JUMP_AUDIO_PATH);
         this.load.audio(this.tileDestroyedAudioKey, Level2.TILE_DESTROYED_PATH);
+        this.load.audio(this.dyingAudioKey, Level2.DYING_AUDIO_PATH);
     }
 
     public unloadScene(): void {
@@ -78,6 +85,9 @@ export default class Level2 extends HW3Level {
     public startScene(): void {
         super.startScene();
         this.nextLevel = MainMenu;
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: HW3Level1.MUSIC_KEY});
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: this.levelMusicKey, loop: false, holdReference: false});
+        this.emitter.fireEvent(GameEventType.PLAY_SOUND, {key: this.levelMusicKey, loop: true, holdReference: true});
     }
 
 }

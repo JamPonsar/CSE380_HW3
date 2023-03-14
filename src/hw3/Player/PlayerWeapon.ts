@@ -1,3 +1,4 @@
+import Input from "../../Wolfie2D/Input/Input";
 import Particle from "../../Wolfie2D/Nodes/Graphics/Particle";
 import ParticleSystem from "../../Wolfie2D/Rendering/Animations/ParticleSystem";
 import Color from "../../Wolfie2D/Utils/Color";
@@ -28,8 +29,11 @@ export default class PlayerWeapon extends ParticleSystem {
      * @param particle the particle to give the animation to
      */
     public setParticleAnimation(particle: Particle) {
+        // Find the direction and angle of the mouse
+        let direction = this.sourcePoint.dirTo(Input.getGlobalMousePosition());
+        let angle = Math.atan(direction.y/direction.x);
         // Give the particle a random velocity.
-        particle.vel = RandUtils.randVec(100, 200, -32, 32);
+        particle.vel = RandUtils.randVec(100 * Math.sign(direction.x) * Math.cos(angle), 200 * Math.sign(direction.x) * Math.cos(angle), -32 + 150 * Math.sin(angle) * Math.sign(direction.x), 32 + 150 * Math.sin(angle) * Math.sign(direction.x));
         particle.color = Color.RED;
 
         // Give the particle tweens

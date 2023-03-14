@@ -7,6 +7,8 @@ import PlayerState from "./PlayerState";
 export default class Jump extends PlayerState {
 
 	public onEnter(options: Record<string, any>): void {
+        // Play the flip animation when the player jumps
+        this.owner.tweens.play(PlayerTweens.FLIP);
         // Get the jump audio key for the player
         let jumpAudio = this.owner.getScene().getJumpAudioKey();
         // Give the player a burst of upward momentum

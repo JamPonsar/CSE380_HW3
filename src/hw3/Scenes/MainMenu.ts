@@ -19,6 +19,7 @@ export default class MainMenu extends Scene {
 
     public loadScene(): void {
         // Load the menu song
+        this.emitter.fireEvent(GameEventType.STOP_SOUND, {key: MainMenu.MUSIC_KEY});
         this.load.audio(MainMenu.MUSIC_KEY, MainMenu.MUSIC_PATH);
     }
 

@@ -23,8 +23,14 @@ import Dead from "./PlayerStates/Dead";
  */
 export const PlayerAnimations = {
     IDLE: "IDLE",
-    WALK: "WALK",
     JUMP: "JUMP",
+    RUNNING_LEFT: "RUNNING_LEFT",
+    RUNNING_RIGHT: "RUNNING_RIGHT",
+    ATTACK_LEFT: "ATTACK_LEFT",
+    ATTACK_RIGHT: "ATTACK_RIGHT",
+    TAKING_DAMAGE: "TAKING_DAMAGE",
+    DYING: "DYING",
+    DEAD: "DEAD"
 } as const
 
 /**
@@ -112,6 +118,9 @@ export default class PlayerController extends StateMachineAI {
         if (Input.isPressed(HW3Controls.ATTACK) && !this.weapon.isSystemRunning()) {
             // Start the particle system at the player's current position
             this.weapon.startSystem(500, 0, this.owner.position);
+        }
+        if (Input.isPressed(HW3Controls.ATTACK)) {
+            this.owner.animation.play(PlayerAnimations.ATTACK_RIGHT, false, PlayerAnimations.IDLE);
         }
 
 	}

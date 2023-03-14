@@ -11,9 +11,9 @@ import HW4Level2 from "./HW3Level2";
  */
 export default class Level1 extends HW3Level {
 
-    public static readonly PLAYER_SPAWN = new Vec2(32, 32);
+    public static readonly PLAYER_SPAWN = new Vec2(40, 200);
     public static readonly PLAYER_SPRITE_KEY = "PLAYER_SPRITE_KEY";
-    public static readonly PLAYER_SPRITE_PATH = "hw4_assets/spritesheets/Hero.json";
+    public static readonly PLAYER_SPRITE_PATH = "hw4_assets/spritesheets/pickleman.json";
 
     public static readonly TILEMAP_KEY = "LEVEL1";
     public static readonly TILEMAP_PATH = "hw4_assets/tilemaps/HW4Level1.json";
@@ -24,6 +24,10 @@ export default class Level1 extends HW3Level {
     public static readonly LEVEL_MUSIC_KEY = "LEVEL_MUSIC";
     public static readonly LEVEL_MUSIC_PATH = "hw4_assets/music/hw5_level_music.wav";
 
+    public static readonly DYING_AUDIO_KEY = "PLAYER_DYING";
+    public static readonly DYING_AUDIO_PATH = "hw4_assets/sounds/dying_sound.mp3";
+
+
     public static readonly JUMP_AUDIO_KEY = "PLAYER_JUMP";
     public static readonly JUMP_AUDIO_PATH = "hw4_assets/sounds/jump.wav";
 
@@ -31,6 +35,7 @@ export default class Level1 extends HW3Level {
     public static readonly TILE_DESTROYED_PATH = "hw4_assets/sounds/switch.wav";
 
     public static readonly LEVEL_END = new AABB(new Vec2(224, 232), new Vec2(24, 16));
+    static MUSIC_KEY: any;
 
     public constructor(viewport: Viewport, sceneManager: SceneManager, renderingManager: RenderingManager, options: Record<string, any>) {
         super(viewport, sceneManager, renderingManager, options);
@@ -50,6 +55,7 @@ export default class Level1 extends HW3Level {
         this.levelMusicKey = Level1.LEVEL_MUSIC_KEY
         this.jumpAudioKey = Level1.JUMP_AUDIO_KEY;
         this.tileDestroyedAudioKey = Level1.TILE_DESTROYED_KEY;
+        this.dyingAudioKey = Level1.DYING_AUDIO_KEY;
 
         // Level end size and position
         this.levelEndPosition = new Vec2(128, 232).mult(this.tilemapScale);
@@ -68,6 +74,7 @@ export default class Level1 extends HW3Level {
         this.load.audio(this.levelMusicKey, Level1.LEVEL_MUSIC_PATH);
         this.load.audio(this.jumpAudioKey, Level1.JUMP_AUDIO_PATH);
         this.load.audio(this.tileDestroyedAudioKey, Level1.TILE_DESTROYED_PATH);
+        this.load.audio(this.dyingAudioKey, Level1.DYING_AUDIO_PATH);
     }
 
     /**
@@ -75,6 +82,11 @@ export default class Level1 extends HW3Level {
      */
     public unloadScene(): void {
         // TODO decide which resources to keep/cull 
+        this.resourceManager.keepSpritesheet(this.playerSpriteKey);
+        this.resourceManager.keepAudio(this.jumpAudioKey);
+        this.resourceManager.keepAudio(this.tileDestroyedAudioKey);
+        this.resourceManager.keepAudio(this.dyingAudioKey);
+        this.resourceManager.unloadAllResources();
     }
 
     public startScene(): void {
